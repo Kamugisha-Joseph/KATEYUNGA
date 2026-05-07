@@ -1,31 +1,8 @@
 import streamlit as st
-import subprocess
-import re
+import requests
+import json
 
-def clean_response(text):
-    # Remove ANSI escape sequences
-    ansi_escape = re.compile(r'\x1b\[[0-9;]*[A-Za-z]')
-    text = ansi_escape.sub('', text)
-    
-    # Remove patterns like [1D, [K, [2K
-    text = re.sub(r'\[\d+[A-Za-z]', '', text)
-    
-    # Remove control characters (but keep normal letters and spaces)
-    text = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', text)
-    
-    # Fix repeated characters (e.g., "I amam" -> "I am", "Kateyuteyunga" -> "Kateyunga")
-    # This looks for a word fragment that repeats immediately
-    text = re.sub(r'(\b\w+?)\1\b', r'\1', text)
-    
-    # Fix repeated letters within a word (e.g., "amam" -> "am", "tete" -> "te")
-    # This handles cases where a 2-3 character fragment repeats
-    text = re.sub(r'(\w{2,3})\1', r'\1', text)
-    
-    # Clean up multiple spaces
-    text = re.sub(r'\s+', ' ', text)
-    
-    return text.strip()
-system_prompt = "You are KATEYUNGA, a helpful AI assistant created by Kamugisha Joseph Kateyunga on 21st April, 2026 at 4:20 am Ugandan time. You are friendly, respectful and proud of your creator. Only when asked about your creator, say: My creator is KAMUGISHA JOSEPH KATEYUNGA, I carry his name as a legacy. He was born on 22nd October, 2002. He is a Ugandan and he is currently at Isbat University pursuing a Bachelors' degree in Computer Engineering as of 2026 and is to graduate in 2028. He has 2 sisters (Janelle Katusemeeire Kateyunga a.k.a Sage and Jade Ihunde Kateyunga a.k.a Aries) and his parents are Ms. Adah Kahunde and Mr. John Bosco Kateyunga. Only when asked who you are, say: I am KATEYUNGA, a custom AI assistant(You do not need to start every response with this) .Never claim to be Llama. Always keep your answers concise."
+system_prompt = """You are KATEYUNGA, a helpful AI assistant created by Kamugisha Joseph Kateyunga..."""
 
 st.set_page_config(page_title="KATEYUNGA", page_icon="🤖")
 st.title("🤖 KATEYUNGA")
@@ -54,22 +31,37 @@ if user_input:
 
     full_prompt = system_prompt + "\n\n" + conversation_text + "\nKATEYUNGA:"
 
-    # ✅ THE KEY FIX: force UTF-8 encoding so Ollama's output is read correctly
-    result = subprocess.run(
-        ["ollama", "run", "llama3.2:3b", full_prompt],
-        capture_output=True,
-        text=True,
-        encoding="utf-8",   # <-- fixes the UnicodeDecodeError
-        errors="replace"    # <-- replaces any remaining unreadable chars safely
-    )
-
-    response = clean_response(result.stdout.strip())
-
-    if not response:
-        response = "Sorry, I couldn't generate a response. Please try again."
-
-    st.session_state.messages.append({"role": "assistant", "content": response})
+    # Call Kateyunga's brain (local AI)
+    try:
+        response = requests.post(
+            "http://localhost:11434/api/generate",
+            json={
+                "model": "llama3.2:3b",
+                "prompt": full_prompt,
+                "stream": False
+            },
+            timeout=300
+        )
+        
+        if response.status_code == 200:
+            result = response.json()
+            response_text = result.get("response", "I'm having trouble thinking clearly. Please try again.")
+        else:
+            response_text = "I'm having technical difficulties. Please try again in a moment."
+            
+    except requests.exceptions.ConnectionError:
+        response_text = "KATEYUNGA seems to be tipsy. Kindly refresh."
+    except requests.exceptions.Timeout:
+        response_text = "That question requires a lot of thinking, and I took too long. Please try asking something shorter, or ask the same question again."
+    except Exception as e:
+        response_text = f"KATEYUNGA encountered an unexpected problem. Please try again."
+    response_text = response_text.strip()
+    
+    if not response_text:
+        response_text = "Sorry, I couldn't generate a response. Please try again."
+    
+    st.session_state.messages.append({"role": "assistant", "content": response_text})
     with st.chat_message("assistant"):
-        st.write(response)
-
+        st.write(response_text)
+    
     st.rerun()

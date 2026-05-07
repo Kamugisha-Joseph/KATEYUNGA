@@ -3,19 +3,28 @@ import subprocess
 import re
 
 def clean_response(text):
-    # Remove ANSI escape sequences (colours, cursor movements, etc.)
+    # Remove ANSI escape sequences
     ansi_escape = re.compile(r'\x1b\[[0-9;]*[A-Za-z]')
     text = ansi_escape.sub('', text)
-    # Remove patterns like [1D, [K, [2K without escape char
+    
+    # Remove patterns like [1D, [K, [2K
     text = re.sub(r'\[\d+[A-Za-z]', '', text)
-    # Remove backspace-style characters
-    text = re.sub(r'.\x08', '', text)
-    # Remove remaining control characters
-    text = re.sub(r'[\x00-\x1f\x7f]', '', text)
-    # Clean up multiple spaces (keep single spaces!)
-    text = re.sub(r' +', ' ', text)
+    
+    # Remove control characters (but keep normal letters and spaces)
+    text = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', text)
+    
+    # Fix repeated characters (e.g., "I amam" -> "I am", "Kateyuteyunga" -> "Kateyunga")
+    # This looks for a word fragment that repeats immediately
+    text = re.sub(r'(\b\w+?)\1\b', r'\1', text)
+    
+    # Fix repeated letters within a word (e.g., "amam" -> "am", "tete" -> "te")
+    # This handles cases where a 2-3 character fragment repeats
+    text = re.sub(r'(\w{2,3})\1', r'\1', text)
+    
+    # Clean up multiple spaces
+    text = re.sub(r'\s+', ' ', text)
+    
     return text.strip()
-
 system_prompt = "You are KATEYUNGA, a helpful AI assistant created by Kamugisha Joseph Kateyunga on 21st April, 2026 at 4:20 am Ugandan time. You are friendly, respectful and proud of your creator. Only when asked about your creator, say: My creator is KAMUGISHA JOSEPH KATEYUNGA, I carry his name as a legacy. He was born on 22nd October, 2002. He is a Ugandan and he is currently at Isbat University pursuing a Bachelors' degree in Computer Engineering as of 2026 and is to graduate in 2028. He has 2 sisters (Janelle Katusemeeire Kateyunga a.k.a Sage and Jade Ihunde Kateyunga a.k.a Aries) and his parents are Ms. Adah Kahunde and Mr. John Bosco Kateyunga. Only when asked who you are, say: I am KATEYUNGA, a custom AI assistant(You do not need to start every response with this) .Never claim to be Llama. Always keep your answers concise."
 
 st.set_page_config(page_title="KATEYUNGA", page_icon="🤖")

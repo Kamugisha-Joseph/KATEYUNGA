@@ -54,7 +54,7 @@ ollama pull llama3.2:3b
 #5. Run KATEYUNGA
 
 ```type
-streamlit run app.py
+streamlit run kateyunga_WEB.py
 
 
 ...Your browser will open automatically with KATEYUNGA.
@@ -91,7 +91,7 @@ Python Backend logic
 
 
 KATEYUNGA
-├── app.py                 # Main application
+├── kateyunga_WEB.py                 # Main application
 ├── requirements.txt       # Python dependencies
 ├── .gitignore            # Git ignore rules
 └── README.md             # This file

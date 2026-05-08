@@ -15,6 +15,11 @@ Built with **Llama 3.2**, **Ollama**, and **Streamlit**.
 - 🔐 **Private** – No API keys. No cloud costs. No spying.
 - 🧩 **Customizable** – Built on open-source Llama 3.2.
 
+#DEMO
+
+Watch the demo video: [KATEYUNGA in action](https://youtu.be/CjAlGFBvsP0)
+
+
 #Requirements
 
 Before running KATEYUNGA, make sure you have:

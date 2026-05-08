@@ -78,7 +78,7 @@ You can:
 I built a local AI assistant named KATEYUNGA (my family name). 
 She:
 - Runs entirely on my laptop (no internet needed)
-- Remembers our conversation
+- Remembers session conversation
 - Responds word by word (streaming) so that it doesn't frustrate the user with longer- time responses.
 - Has a clean chat interface
 - Will soon read PDFs and answer questions about them

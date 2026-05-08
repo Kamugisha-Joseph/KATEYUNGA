@@ -35,3 +35,5 @@ test*.py
 # Icon files (keep locally, don't push)
 Kateyunga.ico
 kateyunga_icon.png
+
+chroma_db/

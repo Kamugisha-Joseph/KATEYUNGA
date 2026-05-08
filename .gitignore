@@ -1,9 +1,37 @@
+# Python cache files
 __pycache__/
-*.pyc 
-dist/
+*.pyc
+*.pyo
+
+# PyInstaller build folders
 build/
-*.exe
+dist/
+output/
+*.spec
+
+# Test files (keep locally, don't push to GitHub)
+step*.py
+absoluteTEST.py
+debug.py
+interactiveTEST.py
+memory.py
+
+# Auto-py-to-exe temporary folder (if it exists)
+tmp*/
+
+# VS Code settings (optional)
 .vscode/
-.idea/
-*.log
+
+# OS junk files
 .DS_Store
+Thumbs.db
+
+# My personal test files (add any others you want to ignore)
+test*.py
+*TEST.py
+
+# The .exe (too large for GitHub)
+*.exe
+# Icon files (keep locally, don't push)
+Kateyunga.ico
+kateyunga_icon.png

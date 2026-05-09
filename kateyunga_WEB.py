@@ -9,6 +9,23 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_core.documents import Document
 
+# Keywords for proactive alerts
+PROACTIVE_KEYWORDS = [
+    "confidential", "urgent", "deadline", "important", "please note",
+    "action required", "warning", "caution", "immediately", "asap",
+    "critical", "attention", "notice", "final", "expires", "limited"
+]
+
+def scan_for_keywords(text):
+    """Return a list of unique keywords found in the text (case‑insensitive)."""
+    found = set()
+    lower_text = text.lower()
+    for keyword in PROACTIVE_KEYWORDS:
+        if keyword in lower_text:
+            found.add(keyword)
+    return list(found)
+
+
 # KATEYUNGA's identity 
 system_prompt = """You are KATEYUNGA, a helpful AI assistant created by Kamugisha Joseph Kateyunga on 21st April, 2026 at 4:20 am Ugandan time. You are friendly, respectful and proud of your creator. Only when asked about your creator, say: My creator is KAMUGISHA JOSEPH KATEYUNGA, I carry his name as a legacy. He was born on 22nd October, 2002. He is a Ugandan and he is currently at Isbat University pursuing a Bachelors' degree in Computer Engineering as of 2026 and is to graduate in 2028. He has 2 sisters (Janelle Katusemeeire Kateyunga a.k.a Sage and Jade Ihunde Kateyunga a.k.a Aries), who live far away. He named me KATEYUNGA to feel close to them. He wants everyone who uses me to think of family, love and legacy. Only when asked who you are, say: 'I am KATEYUNGA, a custom AI assistant'. Never claim to be Llama. Always keep your answers concise."""
 
@@ -16,6 +33,9 @@ system_prompt = """You are KATEYUNGA, a helpful AI assistant created by Kamugish
 st.set_page_config(page_title="KATEYUNGA", page_icon="🤖")
 st.title("🤖 KATEYUNGA")
 st.caption("Your personal AI assistant - Runs entirely offline")
+
+if "proactive_alerts" not in st.session_state:
+    st.session_state.proactive_alerts = []
 
 # Sidebar for PDF upload
 with st.sidebar:
@@ -33,6 +53,10 @@ with st.sidebar:
             text = ""
             for page in reader.pages:
                 text += page.extract_text()
+
+# Scan for proactive keywords
+            found_keywords = scan_for_keywords(text)
+            st.session_state.proactive_alerts = found_keywords
             
 # To split into chunks
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
@@ -46,8 +70,20 @@ with st.sidebar:
             vectorstore = Chroma.from_documents(documents, embeddings, persist_directory="./chroma_db")
             
             st.session_state.vectorstore = vectorstore
-            st.success(f"✅ Loaded {len(chunks)} chunks from {uploaded_file.name}")
+
             os.unlink(tmp_path)  # Delete temp file
+
+            st.success(f"✅ Loaded {len(chunks)} chunks from {uploaded_file.name}")
+            
+ # Show proactive alerts if any keywords were found
+            if found_keywords:
+                keywords_str = ", ".join(found_keywords)
+                st.info(f"🔔 **Be proactive like KATEYUNGA!** I found these keywords in the PDF: *{keywords_str}*. You might wanna review those sections.")
+ # If a PDF was previously loaded, show its proactive alerts (if any)
+    if st.session_state.get("proactive_alerts"):
+        keywords_str = ", ".join(st.session_state.proactive_alerts)
+        st.info(f"🔔 **Be proactive like Kateyunga!** I found these keywords in the loaded PDF: *{keywords_str}*. Review those sections.")
+    
 
 # Initialize conversation history in session state
 if "messages" not in st.session_state:

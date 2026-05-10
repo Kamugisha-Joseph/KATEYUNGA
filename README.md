@@ -4,6 +4,11 @@
 
 KATEYUNGA is a fully offline, private AI assistant that runs entirely on your laptop. It remembers your conversation, responds naturally, and requires no internet connection after setup.
 
+## 📝 Read the full story
+
+[How I built KATEYUNGA – an offline AI assistant that reads my PDFs (no internet required)](https://medium.com/@kamugishaj90/how-i-built-kateyunga-an-offline-ai-assistant-that-can-also-read-my-pdfs-no-internet-required-39580d223542)
+
+
 Built with **Llama 3.2**, **Ollama**, and **Streamlit**.
 
 #Features

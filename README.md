@@ -16,10 +16,10 @@ Built with **Llama 3.2**, **Ollama**, and **Streamlit**.
 - 🧠 **100% Offline** – No internet connection required once installed.
 - 💬 **Conversation memory** – Remembers what you said during the session.
 - ⚡ **Streaming responses** – Words appear progressively, just like a real conversation.
-- 🗃️ **PDF reader(RAG)** -Upload PDFs(ie lecture notes, research papers, contracts etc). KATEYUNGA searches the document and answers based
-                           on its content.
+- 🗃️ **PDF reader(RAG)** -Upload PDFs(ie lecture notes, research papers, contracts etc). KATEYUNGA searches the document and answers based on its content.
 - 🎨 **Chat interface** – Clean, modern web UI with chat bubbles.
 - 🔔 **Proactive alerts** - Automatically highlightsimportant keywords in uploaded PDFs.
+- 👌 **Page citations** - When answering from a PDF, she shows the page number(s) where the information came from.
 - 🔐 **Privacy-first** – No data ever leaves your laptop.
 - 🧩 **Free and open-source** – Built with Llama 3.2, Ollama, Streamlit, and RAG.
 

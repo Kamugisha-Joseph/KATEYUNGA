@@ -22,6 +22,29 @@ Built with **Llama 3.2**, **Ollama**, and **Streamlit**.
 
 Watch the demo video: [KATEYUNGA in action](https://youtu.be/CjAlGFBvsP0)
 
+
+#QUICK START FOR developers
+#------requirements
+-Python 3.12 or higher
+-[Ollama](https://ollama.com) installed and running
+-Llama 3.2 model: 'ollama pull llama3.2:3b'
+#------Run KATEYUNGA
+'''bash
+git clone https://github.com/Kamugisha-Joseph/KATEYUNGA.git
+cd KATEYUNGA
+pip install -r requirements.txt
+streamlit run kateyunga_WEB.py
+
+...Your browser should open automatically
+-if you dont have a requirements.txt, install the dependencies manually:
+pip install streamlit requests
+PyPDF2 langchain-text-splitters
+langchain-community chromadb
+sentence-transformers
+
+
+
+OVERALL PROCEDURE
 #Requirements
 Before running KATEYUNGA, make sure you have:
 

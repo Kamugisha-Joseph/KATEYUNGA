@@ -1,0 +1,7 @@
+streamlit
+requests
+PyPDF2
+langchain-text-splitters
+langchain-community
+chromadb
+senetence-transformers
